@@ -1,0 +1,553 @@
+{% load static %}
+{% load humanize %}
+{% load has_group %}
+{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Covid">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Covid project</title>
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+<style>
+  .counter_box_outer{
+    position: relative; margin-top: -45px; padding:40px;
+    background:#fff;border-radius:25px;
+    box-shadow:0px 10px 25px 0px rgb(178 186 204 / 70%);
+  }
+  .counter_box.type_two{
+    position:relative;
+    float:left;
+    padding: 0px 10px;
+    width: 33.33%
+  }
+  .counter_box.type_two .one{
+    padding-left: 0px;
+  }
+  .headingh1{
+    font-family: 'Nunito', sans-serif;
+    font-size: 36px;
+    color: #274782;
+    line-height: 42px;
+    font-weight: 800;
+    
+  }
+  .headingh4{
+    font-family: 'Nunito', sans-serif;
+    font-size: 23px;
+    color: #274782;
+    line-height: 42px;
+    font-weight: 800;
+    
+  }
+  .headingh5 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 400;
+  }
+  .headingp {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    line-height: 30px;
+    font-weight: 400;
+  }
+  .headingh6{
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
+    font-size: 14px;
+    margin-bottom:0;
+    letter-spacing:2px;
+    color: #dd2d4e;
+    line-height: 28px;
+    font-weight: 700;
+  }
+  .mrwhite {
+    color:#fff;!important
+  }
+  .nunitofont {
+    font-family: 'Nunito' sans-serif;
+  }
+  .counter_box.type_two .image_box {
+    float: left;
+  }
+  .counter_box.type_two .text_box {
+    position: relative;
+    margin-left: 80px;
+  }
+  .odometer.odometer-auto-theme, .odometer.odometer-theme-default {
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.1em;
+    display:inline-block;
+    vertical-align:middle;
+    position:relative;
+  }
+  .odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-default .odometer-digit {
+      display: inline-block;
+      vertical-align: middle;
+      position: relative;
+  }
+  .counter_box.type_two .three{
+    padding-left: 0px;
+  }
+</style>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+      <a class="navbar-brand ml-3" href="#">Covid Project</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#info">Info</a>
+          </li>
+         
+          
+          {% if request.user|has_group:"doctor_group" %}
+          <li class="nav-item">
+            <a href="{% url 'mainapp:emails' %}" class="nav-link btn btn-warning mr-3">Check email</a>
+          </li>
+          {% else %}
+          {% endif %}
+          
+          {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="#cont">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-primary px-3" href="{% url 'account_logout' %}" style="color:white;">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link btn btn-success px-3" href="{% url 'account_login' %}" style="color:white">Login</a>
+          </li>
+          {% endif %}
+          
+        </ul>
+      </div>
+    </nav>
+<br><br>
+
+{% for message in messages %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8 mx-auto">
+      <div id="">
+        <div style="padding: 5px;">
+            <div id="" class="alert {{ message.tags }} alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<div class="container">
+  {% if request.user|has_group:"doctor_group" %}
+    <h4 class="text-muted nunitofont">Welcome {{request.user}}</h4>
+  {% else %}
+  {% endif %}
+  <br><br><br>
+  
+  <div class="counter_box_outer">
+      <div class="row">
+         <!---------row----------->
+         <div class="col-lg-4 col-md-12">
+            <!---------col----------->
+            <div class="heading tp_one">
+               <h6 class="headingh6">Countrywide Tracker</h6>
+               <h1 class="headingh1"><b>Pandemic <br>Statistics</b></h1>
+               <p class="text-muted" style="font-family: 'Nunito' sans-serif;"><i>Last updated: {{time}}</i></p>
+            </div>
+            <!---------col-end---------->
+         </div>
+         <div class="col-lg-8 col-md-12 d-flex">
+            <!---------col----------->
+            <div style="position: relative; margin: auto 0 auto 50px; width:100%;">
+               <div class="counter_box type_two one">
+                  <div class="image_box">
+                     <img src="{% static 'img/fun-1.svg' %}" class="img-fluid" alt="svg_iage">
+                  </div>
+                  <div class="text_box">
+                     <h2>
+                       <span class="odometer odometer-auto-theme">
+                       <div class="odometer-inside">
+                         <span class="odometer-digit" style="color:#ffa800;font-size:23px;!important"><b>{{new_cases}}</b></span>
+                        </div>
+                      </span>
+                    </h2>
+                     <h6 class="small text-muted">New Cases</h6>
+                  </div>
+               </div>
+               <div class="counter_box type_two two">
+                  <div class="image_box">
+                     <img src="{% static 'img/fun-2.svg' %}" class="img-fluid" alt="svg_iage">
+                  </div>
+                  <div class="text_box">
+                    <h2>
+                      <span class="odometer odometer-auto-theme">
+                          <div class="odometer-inside">
+                            <span class="odometer-digit" style="color:#252c36;font-size:23px;!important"><b>{{new_deaths}}</b></span>
+                          </div>
+                        </span>
+                      </h2>
+                    <h6 class="small text-muted">New Deaths</h6>
+                  </div>
+               </div>
+               <div class="counter_box type_two three">
+                  <div class="image_box">
+                     <img src="{% static 'img/fun-3.svg' %}" class="img-fluid" alt="svg_iage">
+                  </div>
+                  <div class="text_box">
+                    <h2>
+                      <span class="odometer odometer-auto-theme">
+                          <div class="odometer-inside">
+                            <span class="odometer-digit" style="color:#7da60c;font-size:23px;!important"><b>{{recovered}}</b></span>
+                          </div>
+                        </span>
+                      </h2>
+                     <h6 class="small text-muted">Recovered</h6>
+                  </div>
+               </div>
+            </div>
+            <!---------col-end---------->
+         </div>
+         <!----------row-end---------->
+      </div>
+  </div>
+  <!-- <div class="row">
+    <div class="col-lg-4 col-md-12">
+      <div>
+        <h4>COUNTRYWIDE TRACKER</h4>
+        <h5>Pandemic Statistics</h5>
+        <p class="text-muted">Last Updated at {{time}}</p>
+      </div>
+    </div>
+    <div class="col-lg-8 col-md-12">and I need you</div>
+  </div> -->
+</div>
+
+<br><br>
+<div class="container">
+  <canvas id="line-chart" width="900" height="450"></canvas>
+</div>
+<br><br>
+
+<div style="background-color: #eff2f9; " id="info">
+  <br><br><br>
+  <div class="container">
+    <p class="headingh1 text-center" style="color:black;!important"><b>How is COVID-19 transmitted?</b></p><br>
+  
+    <div class="row">
+      <div class="col-sm-4">
+        <div>
+          <center><img src="{% static 'img/spreading-1-1.png' %}" class="img-responsive"></center>
+        </div>
+        <div>
+          <h4 class="headingh4 text-center"><b>Air by cough or sneeze</b></h4>
+          <p class="text-muted text-center">
+            People who are infected with COVID can release particles and droplets of 
+            respiratory fluids that contain the SARS CoV-2 virus into the air when they exhale
+          </p>
+        </div>
+      </div>
+  
+      <div class="col-sm-4">
+        <div>
+          <center><img src="{% static 'img/spreading-1-2.png' %}" class="img-responsive"></center>
+        </div>
+        <div>
+          <h4 class="headingh4 text-center"><b>Animal Contact</b></h4>
+          <p class="text-muted text-center">
+            Some coronaviruses that infect animals can be spread to people and then 
+            spread between people, but this is rare. This is what happened with SARS-CoV-2, which likely originated in bats.
+          </p>
+        </div>
+      </div>
+  
+      <div class="col-sm-4">
+        <div>
+          <center><img src="{% static 'img/spreading-1-3.png' %}" class="img-responsive"></center>
+        </div>
+        <div>
+          <h4 class="headingh4 text-center"><b>Personal Contact</b></h4>
+          <p class="text-muted text-center">
+            The virus can also spread in poorly ventilated and/or crowded indoor settings, 
+            where people tend to spend longer periods of time. This is because aerosols remain 
+            suspended in the air or travel farther than 1 metre (long-range).
+          </p>
+        </div>
+      </div>
+    </div>
+  <br>
+    <div class="row">
+      <div class="col-sm-4">
+        <div>
+          <center><img src="{% static 'img/spreading-1-4.png' %}" class="img-responsive"></center>
+        </div>
+        <div>
+          <h4 class="headingh4 text-center"><b>Contaminated Objects</b></h4>
+          <p class="text-muted text-center">
+            People may also become infected by touching objects that have been contaminated by the virus when touching their eyes, 
+            nose or mouth without cleaning their hands.
+          </p>
+        </div>
+      </div>
+  
+      <div class="col-sm-4">
+        <div>
+          <center><img src="{% static 'img/spreading-1-5.png' %}" class="img-responsive"></center>
+        </div>
+        <div>
+          <h4 class="headingh4 text-center"><b>Droplets from an infected person</b></h4>
+          <p class="text-muted text-center">
+            The virus can spread from an infected person’s mouth or nose in small liquid particles
+             when they cough, sneeze, speak, sing or breathe. These particles range from larger respiratory droplets to smaller aerosols.
+          </p>
+        </div>
+      </div>
+  
+      <div class="col-sm-4">
+        <div>
+          <center><img src="{% static 'img/spreading-1-6.png' %}" class="img-responsive"></center>
+        </div>
+        <div>
+          <h4 class="headingh4 text-center"><b>Touching infected surfaces</b></h4>
+          <p class="text-muted text-center">
+            Hands touch many surfaces and can pick up viruses. 
+            Once contaminated, hands can transfer the virus to your eyes, nose or mouth. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br><br>
+</div>
+
+
+<div style="background-color: purple;">
+  <br><br><br><br>
+  <h1 class="headingh1 mrwhite text-center">Preventive Measures</h1>
+  <br><br>
+
+  <div class="row">
+    <div class="col-md-9 mx-auto">
+      <p class="headingh5 mrwhite">To prevent the spread of COVID-19:<br></p>
+      <p class="headingh5 mrwhite">1. Clean your hands often. Use soap and water, or an alcohol-based hand rub.</p>
+      <p class="headingh5 mrwhite">2. Maintain a safe distance from anyone who is coughing or sneezing.</p>
+      <p class="headingh5 mrwhite">3. Wear a mask when physical distancing is not possible.</p>
+      <p class="headingh5 mrwhite">4. Don’t touch your eyes, nose or mouth.</p>
+      <p class="headingh5 mrwhite">5. Cover your nose and mouth with your bent elbow or a tissue when you cough or sneeze.</p>
+      <p class="headingh5 mrwhite">6. Stay home if you feel unwell.</p>
+      <p class="headingh5 mrwhite">7. If you have a fever, cough and difficulty breathing, seek medical attention.</p>
+    </div>
+  </div>
+<br><br><br><br><br><br>
+</div>
+
+{% if user.is_authenticated %}
+<div style="background-color: #eff2f9;" id="cont">
+    <br><br>
+    <h1 class="headingh1 text-center" style="color: black;!important">Contacts</h1>
+  <br><br>
+ 
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8 mx-auto">
+        <h4 class="text-center headingh5">Leave a Note here for a Doctor if you feel any symptoms</h4>
+        <form method="POST">
+        {% csrf_token %}
+        {{doctorform|crispy}}
+        <br>
+        <button type="submit" class="btn btn-primary" value="Send">Send</button>
+      </form><br><br>
+      </div>
+    </div>
+    </div>
+        <br><br>
+</div> 
+{% endif %} 
+
+<!-- Modal -->
+<div class="modal fade" id="CommentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add a Comment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          {{form|crispy}}
+          <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br><br>
+
+        {% if request.user.is_authenticated %}
+        <h1 class="headingh1 text-center">Comments</h1>
+        <br><br>
+        <center><a href="" class="btn btn-primary"data-toggle="modal" data-target="#CommentModal"><i class="fa fa-plus"></i>&nbsp;Add a Comment</a></center>
+        <br><br>
+          <div class="row d-flex justify-content-center">
+              <div class="col-md-8">
+                  <div class="headings d-flex justify-content-between align-items-center mb-3">
+                      
+                      <!-- <div class="buttons"> <span class="badge bg-white d-flex flex-row align-items-center"> <span class="text-primary">Comments "ON"</span>
+                              <div class="form-check form-switch"> <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked> </div>
+                          </span> </div> -->
+                  </div>
+                  {% for word in usercomments %}
+                  <div class="card p-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div class="user d-flex flex-row align-items-center"> 
+                            <img src="{% static 'img/avatar.jpg' %}" width="30" class="user-img rounded-circle mr-2"> 
+                            <span>
+                              <small class="font-weight-bold text-primary headingp">{{word.user.username}}</small> 
+                              <!-- <small class="font-weight-bold">{{word.comment}}</small> -->
+                            </span> 
+                          </div> 
+                          <small class=" headingp">{{word.timestamp}}</small>
+                      </div>
+                      <div class="ml-5"><small class="font-weight-bold headingp">{{word.comment}}</small></div>
+                      <div class="action d-flex justify-content-between mt-2 align-items-center">
+                          <!-- <div class="reply px-4"><span class="dots"></span> <small class="text-muted headingp">Reply</small> <span class="dots"></span></div> -->
+                          <div class="icons align-items-center"> </div>
+                      </div>
+                  </div><br>
+                  {% endfor %}
+              </div>
+          </div>
+          {% endif %}
+    </div>
+  </div>
+  <br>
+
+  
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-light text-muted">
+  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+    Copyright &copy; 2021. 
+    <a class="text-reset fw-bold" href="">Made by Evelyne</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+
+
+
+<script>
+  var myurl;
+  $.getJSON("/history", function(data) {
+  myurl = data;
+  const total_cases = []
+  const total_deaths = []
+  const recovered = []
+  const dates = []
+  for (var i=0; i < myurl.length; i++){
+    total_cases.push(myurl[i]["total_cases"])
+    dates.push(myurl[i]["day"])
+    total_deaths.push(myurl[i]["total_deaths"])
+    recovered.push(myurl[i]["recovered"])
+  }
+  // console.log(dates)
+  new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    axisY:{
+       interval: 90
+     },
+    data: {
+      labels: [...dates],
+      datasets: [{ 
+          data: [...total_cases],
+          label: "Total Cases",
+          borderColor: "#1169CD ",
+          fill: false
+        }, 
+        {
+          data:[...total_deaths],
+          label: "Total Deaths",
+          borderColor: "#FF5733",
+          fill: false
+        },
+        {
+          data: [...recovered],
+          label: "Recovered",
+          borderColor: "#319523"
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      },
+      scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Month'
+        },
+        ticks: {
+          // forces step size to be 50 units
+          stepSize: 100
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: '# of Cases'
+        },
+        // min: 0,
+        // max: 100,
+        // ticks: {
+        //   // forces step size to be 50 units
+        //   stepSize: 100
+        // }
+      }
+    }
+    }
+  }); 
+});
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+  </body>
+</html>
